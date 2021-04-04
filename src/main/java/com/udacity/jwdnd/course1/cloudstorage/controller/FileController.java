@@ -64,7 +64,7 @@ public class FileController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteStudent(@PathVariable("id") Integer id, Authentication authentication,
+    public String deleteFile(@PathVariable("id") Integer id, Authentication authentication,
                                 Model model, RedirectAttributes ra) {
         User user = userService.getUserByUsername(authentication.getName());
         int deleted = fileService.deleteById(id);

@@ -30,7 +30,7 @@ public interface FileMapper {
     //UPDATE
     @Update("UPDATE FILES set filename=#{filename}, contenttype=#{contentType}, filesize=#{fileSize}, " +
             "userid=#{userId}, filedata=#{fileData}, uploadtime=#{uploadTime} WHERE fileid = #{fileId}")
-    int updateCredential(File file);
+    int updateFile(File file);
 
     //DELETE
     @Delete("DELETE FROM FILES WHERE fileid = #{fileId}")

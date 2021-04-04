@@ -11,9 +11,7 @@
     </head>
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container">
-            <div id="logoutDiv">
-                <a type="submit" th:href="@{/logout}" class="btn btn-secondary float-right">Logout</a>
-            </div>
+
             <div id="contentDiv" style="clear: right;">
                 <nav style="clear: right;">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -25,6 +23,9 @@
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="nav-credentials-tab" data-bs-toggle="tab" data-bs-target="#nav-credentials" type="button" role="tab" aria-controls="contact" aria-selected="false">Credentials</button>
+                        </li>
+                        <li id="logoutDiv">
+                            <a type="submit" th:href="@{/logout}" class="btn btn-secondary float-right">Logout</a>
                         </li>
                     </ul>
                 </nav>
@@ -89,7 +90,18 @@
                         <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
                             + Add a New Note
                         </button>
-
+                        <div id="note-save-success-msg" th:if="${noteSaveSuccess}" class="alert alert-success">
+                            Note was saved.
+                        </div>
+                        <div id="note-save-error-msg" th:if="${noteSaveError}"  class="alert alert-danger">
+                            <span>Note was not save, please try again</span>
+                        </div>
+                        <div id="note-update-success-msg" th:if="${noteUpdateSuccess}" class="alert alert-success">
+                            Note was updated.
+                        </div>
+                        <div id="note-update-error-msg" th:if="${noteUpdateError}"  class="alert alert-danger">
+                            <span>Note was not updated, please try again</span>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-striped" id="userTable">
                                 <thead>
@@ -100,13 +112,18 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    <tr th:each="note : ${notes}">
                                         <td>
-                                            <button type="button" class="btn btn-success">Edit</button>
-                                            <a class="btn btn-danger">Delete</a>
+                                            <button
+                                                    type="button"
+                                                    class="btn btn-success"
+                                                    th:onclick="javascript: showNoteModal([[${note.noteId}]], [[${note.noteTitle}]], [[${note.noteDescription}]])">
+                                            Edit
+                                            </button>
+                                            <a class="btn btn-danger" th:href="@{/notes/delete/{id}(id=${note.noteId})}">Delete</a>
                                         </td>
-                                        <th scope="row">Example Note Title</th>
-                                        <td>Example Note Description </td>
+                                        <td th:text="${note.noteTitle}">Example Note Title</td>
+                                        <td th:text="${note.noteDescription}">Example Note Description </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -117,26 +134,23 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="noteModalLabel">Note</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" method="POST">
+                                        <form th:action="@{notes/save}" method="POST">
                                             <input type="hidden" name="noteId" id="note-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
-                                                <input type="text" name= "noteTitle" class="form-control" id="note-title" maxlength="20" required>
+                                                <input  type="text" name= "noteTitle" class="form-control" id="note-title" maxlength="20" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="note-description" class="col-form-label">Description</label>
-                                                <textarea class="form-control" name="noteDescription" id="note-description" rows="5" maxlength="1000" required></textarea>
+                                                <textarea  class="form-control" name="noteDescription" id="note-description" rows="5" maxlength="1000" required></textarea>
                                             </div>
                                             <button id="noteSubmit" type="submit" class="d-none"></button>
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                         <button type="button" class="btn btn-primary" onclick="$('#noteSubmit').click();">Save changes</button>
                                     </div>
                                 </div>
