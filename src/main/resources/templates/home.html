@@ -12,9 +12,7 @@
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container">
             <div id="logoutDiv">
-                <form action="#" method="POST">
-                    <button type="submit" class="btn btn-secondary float-right">Logout</button>
-                </form>
+                <a type="submit" th:href="@{/logout}" class="btn btn-secondary float-right">Logout</a>
             </div>
             <div id="contentDiv" style="clear: right;">
                 <nav style="clear: right;">
@@ -32,11 +30,20 @@
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
-                        <div id="success-msg" th:if="${fileUploadSuccess}" class="alert alert-success">
+                        <div id="file-upload-success-msg" th:if="${fileUploadSuccess}" class="alert alert-success">
                             You successfully uploaded the file.
                         </div>
-                        <div id="error-msg" th:if="${fileUploadError}"  class="alert alert-danger">
-                            <span>Some error has happened while upload</span>
+                        <div id="file-upload-error-msg" th:if="${fileUploadError}"  class="alert alert-danger">
+                            <span>Some error happened while upload</span>
+                        </div>
+                        <div id="file-delete-error-msg" th:if="${fileDeleteError}"  class="alert alert-danger">
+                            <span>Some error happened while deleting the file</span>
+                        </div>
+                        <div id="file-delete-success-msg" th:if="${fileDeleteSuccess}" class="alert alert-success">
+                            You successfully deleted the file.
+                        </div>
+                        <div id="file-download-error-msg" th:if="${fileDownloadError}"  class="alert alert-danger">
+                            <span>Some error has happened while deleting the file</span>
                         </div>
                         <div class="text-warning">
                             <h3></h3>
