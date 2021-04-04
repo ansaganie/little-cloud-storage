@@ -19,9 +19,10 @@ CREATE TABLE IF NOT EXISTS FILES (
     fileid INT PRIMARY KEY auto_increment,
     filename VARCHAR,
     contenttype VARCHAR,
-    filesize VARCHAR,
+    filesize BIGINT(20),
     userid INT,
     filedata BLOB,
+    uploadtime DATETIME(6),
     foreign key (userid) references USERS(userid)
 );
 

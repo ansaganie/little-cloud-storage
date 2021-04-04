@@ -6,9 +6,11 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+@Mapper
 public interface NoteMapper {
     //CREATE
     @Insert("INSERT INTO NOTES (notetitle, notedescription, userid) " +
