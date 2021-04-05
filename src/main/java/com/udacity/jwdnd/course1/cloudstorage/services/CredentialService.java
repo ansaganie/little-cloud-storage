@@ -2,6 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 
 import com.udacity.jwdnd.course1.cloudstorage.mapper.CredentialMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -33,8 +34,17 @@ public class CredentialService {
         return result;
     }
 
-    public int update(Credential credential) {
-        return credentialMapper.updateCredential(encryptCred(credential));
+    public int update(Credential credential, Integer userId) {
+        Credential existing = credentialMapper.getCredentialById(credential.getCredentialId());
+        if (existing.getUserId().equals(userId)) {
+            return credentialMapper.updateCredential(encryptCred(credential));
+        } else {
+            return 0;
+        }
+    }
+
+    public int deleteById(Integer id, Integer userId) {
+        return credentialMapper.deleteById(id, userId);
     }
 
     private Credential encryptCred(Credential credential) {
@@ -56,9 +66,5 @@ public class CredentialService {
         String decryptedPassword = encryptionService.decryptValue(credential.getPassword(), key);
         credential.setPassword(decryptedPassword);
         return credential;
-    }
-
-    public int deleteById(Integer id) {
-        return credentialMapper.deleteById(id);
     }
 }

@@ -23,20 +23,15 @@ public interface FileMapper {
     @Select("SELECT fileid, filename, filesize FROM FILES WHERE userid = #{userId}")
     List<File> getFilesByUserId(Integer userId);
 
-    @Select("SELECT * FROM FILES WHERE fileid = #{fileId}")
-    File getFileById(Integer fileId);
+    @Select("SELECT * FROM FILES WHERE fileid = #{fileId} AND userid = #{userId}")
+    File getFileById(Integer fileId, Integer userId);
 
-    @Select("SELECT * FROM FILES WHERE filename = #{filename}")
-    File getFileByFilename(String filename);
-
-    //UPDATE
-    @Update("UPDATE FILES set filename=#{filename}, contenttype=#{contentType}, filesize=#{fileSize}, " +
-            "userid=#{userId}, filedata=#{fileData}, uploadtime=#{uploadTime} WHERE fileid = #{fileId}")
-    int updateFile(File file);
+    @Select("SELECT * FROM FILES WHERE filename = #{filename} AND userid = #{userId} AND filesize = #{filesize}")
+    File getFileByFilenameAndUserId(String filename, Integer userId, Long filesize);
 
     //DELETE
-    @Delete("DELETE FROM FILES WHERE fileid = #{fileId}")
-    int deleteById(Integer fileId);
+    @Delete("DELETE FROM FILES WHERE fileid = #{fileId}  AND userid = #{userId}")
+    int deleteById(Integer fileId, Integer userId);
 
 
 

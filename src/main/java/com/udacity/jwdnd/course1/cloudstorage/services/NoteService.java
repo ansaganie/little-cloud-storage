@@ -2,7 +2,6 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 
 import com.udacity.jwdnd.course1.cloudstorage.mapper.NoteMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,15 +23,13 @@ public class NoteService {
         return noteMapper.getNotesByUserId(userId);
     }
 
-    public Note getNoteById(Integer id) {
-        return noteMapper.getNoteById(id);
+    public int update(Note note, Integer userId) {
+        Note existing = noteMapper.getNoteById(note.getNoteId());
+        if (existing.getNoteId().equals(userId)) return noteMapper.updateNote(note);
+        else return 0;
     }
 
-    public int update(Note note) {
-        return noteMapper.updateNote(note);
-    }
-
-    public int deleteById(Integer id) {
-        return noteMapper.deleteById(id);
+    public int deleteById(Integer id, Integer userId) {
+        return noteMapper.deleteById(id, userId);
     }
 }

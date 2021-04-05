@@ -11,9 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
-
 
 @Controller
 @RequestMapping("/credentials")
@@ -29,7 +26,7 @@ public class CredentialController {
 
     @PostMapping("/save")
     public String saveCredential(@ModelAttribute("credential") Credential credential, Authentication authentication,
-                                 RedirectAttributes ra, HttpServletRequest request) {
+                                 RedirectAttributes ra) {
         User user = userService.getUserByUsername(authentication.getName());
         Integer userId = user.getUserId();
         if (credential == null) {
@@ -46,7 +43,7 @@ public class CredentialController {
                 }
             } else {
                 credential.setUserId(user.getUserId());
-                int updated = credentialService.update(credential);
+                int updated = credentialService.update(credential, userId);
                 if (updated > 0) {
                     ra.addFlashAttribute("credentialUpdateSuccess", true);
                     ra.addFlashAttribute("credentials", credentialService.getAllCredentialsByUserId(user.getUserId()));
@@ -62,8 +59,9 @@ public class CredentialController {
     public String deleteNote(@PathVariable("id") Integer id, Authentication authentication,
                              RedirectAttributes ra) {
         User user = userService.getUserByUsername(authentication.getName());
-        int deleted = credentialService.deleteById(id);
-        if (deleted < 0){
+        Integer userId = user.getUserId();
+        int deleted = credentialService.deleteById(id, userId);
+        if (deleted == 0){
             logger.error("Credential with id = " + id + " was not deleted");
             ra.addFlashAttribute("credentialDeleteError", true);
         } else {

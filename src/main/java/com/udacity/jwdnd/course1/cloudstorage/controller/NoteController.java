@@ -31,6 +31,7 @@ public class NoteController {
         if (note == null) {
             ra.addFlashAttribute("noteSaveError", true);
         } else {
+
             if (note.getNoteId() == null) {
                 int noteId;
                 note.setUserId(userId);
@@ -42,7 +43,7 @@ public class NoteController {
                 }
             } else {
                 note.setUserId(user.getUserId());
-                int updated = noteService.update(note);
+                int updated = noteService.update(note, userId);
                 if (updated > 0) {
                     ra.addFlashAttribute("noteUpdateSuccess", true);
                     ra.addFlashAttribute("notes", noteService.getAllNotesByUserId(user.getUserId()));
@@ -58,8 +59,9 @@ public class NoteController {
     public String deleteNote(@PathVariable("id") Integer id, Authentication authentication,
                              RedirectAttributes ra) {
         User user = userService.getUserByUsername(authentication.getName());
-        int deleted = noteService.deleteById(id);
-        if (deleted < 0){
+        Integer userId = user.getUserId();
+        int deleted = noteService.deleteById(id, userId);
+        if (deleted == 0){
             logger.error("Note with id = " + id + " was not deleted");
             ra.addFlashAttribute("noteDeleteError", true);
         } else {

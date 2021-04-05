@@ -30,6 +30,21 @@
                 </div>
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane show active" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
+                        <form th:action="@{/files/upload}" enctype="multipart/form-data" method="POST">
+                            <div class="container">
+                                <div class="row" style="margin: 1em;">
+                                    <div class="col-sm-2">
+                                        <label for="fileUpload">Upload a New File:</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="file" class="form-control-file" id="fileUpload" name="fileUpload">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <button type="submit" class="btn btn-dark">Upload</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                         <div id="file-upload-success-msg" th:if="${fileUploadSuccess}" class="alert alert-success">
                             You successfully uploaded the file.
                         </div>
@@ -50,21 +65,6 @@
                                 If you are sure that these are different files,
                                 please try to change its name and upload it again.
                         </div>
-                        <form th:action="@{/files/upload}" enctype="multipart/form-data" method="POST">
-                            <div class="container">
-                                <div class="row" style="margin: 1em;">
-                                    <div class="col-sm-2">
-                                        <label for="fileUpload">Upload a New File:</label>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input type="file" class="form-control-file" id="fileUpload" name="fileUpload">
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <button type="submit" class="btn btn-dark">Upload</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
                         <div class="table-responsive">
                             <table class="table table-striped" id="fileTable">
                                 <thead>

@@ -23,16 +23,16 @@ public class FileService {
         return fileMapper.getFilesByUserId(userId);
     }
 
-    public int deleteById(Integer fileId) {
-        return fileMapper.deleteById(fileId);
+    public int deleteById(Integer fileId, Integer userId) {
+        return fileMapper.deleteById(fileId, userId);
     }
 
-    public File getFileById(Integer fileId) {
-        return fileMapper.getFileById(fileId);
+    public File getFileById(Integer fileId, Integer userId) {
+        return fileMapper.getFileById(fileId, userId);
     }
 
-    public boolean fileExists(String filename, Long filesize) {
-        File file = fileMapper.getFileByFilename(filename);
-        return file != null && filesize.equals(file.getFileSize());
+    public boolean fileExists(String filename, Integer userId, Long filesize) {
+        File file = fileMapper.getFileByFilenameAndUserId(filename, userId, filesize);
+        return file != null;
     }
 }

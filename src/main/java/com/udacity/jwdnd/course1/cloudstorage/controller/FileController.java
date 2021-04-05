@@ -37,10 +37,11 @@ public class FileController {
     public String handleFileUpload(@RequestParam("fileUpload") MultipartFile fileUpload,
                                    Authentication authentication, RedirectAttributes ra) {
         User user = userService.getUserByUsername(authentication.getName());
-        if (fileUpload != null) {
+        Integer userId = user.getUserId();
+        if (!fileUpload.isEmpty()) {
             String filename = StringUtils.cleanPath(Objects.requireNonNull(fileUpload.getOriginalFilename()));
             Long filesize = fileUpload.getSize();
-            if (fileService.fileExists(filename, filesize)) {
+            if (fileService.fileExists(filename,  userId, filesize)) {
                 ra.addFlashAttribute("fileExists", true);
                 return "redirect:/home#nav-files";
             }
@@ -61,6 +62,8 @@ public class FileController {
             }
             if (fileId == -1) ra.addFlashAttribute("fileUploadError", true);
             else ra.addFlashAttribute("fileUploadSuccess", true);
+        } else {
+            ra.addFlashAttribute("fileUploadError", true);
         }
         ra.addFlashAttribute("files", fileService.getFilesByUserId(user.getUserId()));
         ra.addFlashAttribute("activeTab", "files");
@@ -69,23 +72,27 @@ public class FileController {
 
     @GetMapping("/delete/{id}")
     public String deleteFile(@PathVariable("id") Integer id, Authentication authentication,
-                                Model model, RedirectAttributes ra) {
+                             RedirectAttributes ra) {
         User user = userService.getUserByUsername(authentication.getName());
-        int deleted = fileService.deleteById(id);
-        if (deleted < 0){
+        Integer userId = user.getUserId();
+        int deleted = fileService.deleteById(id, userId);
+        if (deleted == 0){
             logger.error("File with id = " + id + " was not deleted");
             ra.addFlashAttribute("fileDeleteError", true);
         } else {
             ra.addFlashAttribute("fileDeleteSuccess", true);
         }
-        ra.addFlashAttribute("files", fileService.getFilesByUserId(user.getUserId()));
+        ra.addFlashAttribute("files", fileService.getFilesByUserId(userId));
         ra.addFlashAttribute("activeTab", "files");
         return "redirect:/home#nav-files";
     }
 
     @GetMapping("/download/{id}")
-    public String getFile(@PathVariable("id") Integer id, HttpServletResponse response) {
-        File file = fileService.getFileById(id);
+    public String getFile(@PathVariable("id") Integer id, Authentication authentication,
+                          HttpServletResponse response) {
+        User user = userService.getUserByUsername(authentication.getName());
+        Integer userId = user.getUserId();
+        File file = fileService.getFileById(id, userId);
         if (file == null) {
             throw new IllegalArgumentException("There is no file with such id = " + id);
         } else {
