@@ -16,7 +16,7 @@ public class DataLoader implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         User user = new User(null, "admin", "admin", "admin", "admin", "admin");
         userService.createUser(user);
     }

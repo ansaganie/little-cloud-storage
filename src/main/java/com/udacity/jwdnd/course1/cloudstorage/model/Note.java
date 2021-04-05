@@ -26,16 +26,8 @@ public class Note {
         return noteTitle;
     }
 
-    public void setNoteTitle(String noteTitle) {
-        this.noteTitle = noteTitle;
-    }
-
     public String getNoteDescription() {
         return noteDescription;
-    }
-
-    public void setNoteDescription(String noteDescription) {
-        this.noteDescription = noteDescription;
     }
 
     public Integer getUserId() {

@@ -39,24 +39,12 @@ public class File {
         return filename;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
     public String getContentType() {
         return contentType;
     }
 
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
     public Long getFileSize() {
         return fileSize;
-    }
-
-    public void setFileSize(Long fileSize) {
-        this.fileSize = fileSize;
     }
 
     public Integer getUserId() {
@@ -71,16 +59,8 @@ public class File {
         return fileData;
     }
 
-    public void setFileData(byte[] fileData) {
-        this.fileData = fileData;
-    }
-
     public Date getUploadTime() {
         return uploadTime;
-    }
-
-    public void setUploadTime(Date uploadTime) {
-        this.uploadTime = uploadTime;
     }
 
     @Override

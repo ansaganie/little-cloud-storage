@@ -44,10 +44,6 @@ public class User {
         return salt;
     }
 
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -60,16 +56,8 @@ public class User {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     @Override
