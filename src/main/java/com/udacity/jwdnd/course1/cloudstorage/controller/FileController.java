@@ -60,6 +60,7 @@ public class FileController {
             ra.addFlashAttribute("fileUploadSuccess", true);
         }
         ra.addFlashAttribute("files", fileService.getFilesByUserId(user.getUserId()));
+        ra.addFlashAttribute("activeTab", "files");
         return "redirect:/home";
     }
 
@@ -75,12 +76,12 @@ public class FileController {
             ra.addFlashAttribute("fileDeleteSuccess", true);
         }
         ra.addFlashAttribute("files", fileService.getFilesByUserId(user.getUserId()));
+        ra.addFlashAttribute("activeTab", "files");
         return "redirect:/home";
     }
 
     @GetMapping("/download/{id}")
-    public void getFile(@PathVariable("id") Integer id, HttpServletResponse response,
-                        Model model) {
+    public String getFile(@PathVariable("id") Integer id, HttpServletResponse response) {
         File file = fileService.getFileById(id);
         if (file == null) {
             throw new IllegalArgumentException("There is no file with such id = " + id);
@@ -93,5 +94,6 @@ public class FileController {
                 logger.error(e.getMessage());
             }
         }
+        return "redirect:/home";
     }
 }

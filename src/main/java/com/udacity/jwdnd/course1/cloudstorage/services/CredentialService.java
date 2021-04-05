@@ -67,4 +67,8 @@ public class CredentialService {
         credential.setPassword(decryptedPassword);
         return credential;
     }
+
+    public int deleteById(Integer id) {
+        return credentialMapper.deleteById(id);
+    }
 }
