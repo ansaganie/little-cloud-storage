@@ -24,12 +24,12 @@
                             <button class="nav-link" id="nav-credentials-tab" data-bs-toggle="tab" data-bs-target="#nav-credentials" type="button" role="tab" aria-controls="contact" aria-selected="false">Credentials</button>
                         </li>
                         <li id="logoutDiv">
-                            <a type="submit" th:href="@{/logout}" class="btn btn-secondary float-right">Logout</a>
+                            <a type="submit" id="logout-button" th:href="@{/logout}" class="btn btn-secondary float-right">Logout</a>
                         </li>
                     </ul>
                 </div>
                 <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
+                    <div class="tab-pane show active" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
                         <div id="file-upload-success-msg" th:if="${fileUploadSuccess}" class="alert alert-success">
                             You successfully uploaded the file.
                         </div>
@@ -90,8 +90,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
-                        <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
+                    <div class="tab-pane" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
+                        <button id="add-note-button" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
                             + Add a New Note
                         </button>
                         <div id="note-save-success-msg" th:if="${noteSaveSuccess}" class="alert alert-success">
@@ -125,24 +125,22 @@
                                     <tr th:each="note : ${notes}">
                                         <td>
                                             <button
-                                                    type="button"
-                                                    class="btn btn-success"
-                                                    th:onclick="javascript: showNoteModal([[${note.noteId}]], [[${note.noteTitle}]], [[${note.noteDescription}]])">
-                                            Edit
-                                            </button>
-                                            <a class="btn btn-danger" th:href="@{/notes/delete/{id}(id=${note.noteId})}">Delete</a>
+                                                type="button"
+                                                class="btn btn-success note-edit-button"
+                                                th:onclick="javascript: showNoteModal([[${note.noteId}]], [[${note.noteTitle}]], [[${note.noteDescription}]])">Edit</button>
+                                            <a class="note-delete-button btn btn-danger" th:href="@{/notes/delete/{id}(id=${note.noteId})}">Delete</a>
                                         </td>
-                                        <td th:text="${note.noteTitle}">Example Note Title</td>
-                                        <td th:text="${note.noteDescription}">Example Note Description </td>
+                                        <td class="note-title-print" th:text="${note.noteTitle}">Example Note Title</td>
+                                        <td class="note-description-print" th:text="${note.noteDescription}">Example Note Description </td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <div th:if="${#lists.isEmpty(notes)}">
+                            <div id="no-notes" th:if="${#lists.isEmpty(notes)}">
                                 There is no notes currently, please add some...
                             </div>
                         </div>
 
-                        <div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel" aria-hidden="true">
+                        <div class="modal" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -170,8 +168,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="nav-credentials" role="tabpanel" aria-labelledby="nav-credentials-tab">
-                        <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
+                    <div class="tab-pane" id="nav-credentials" role="tabpanel" aria-labelledby="nav-credentials-tab">
+                        <button id="add-credential-button" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
                             + Add a New Credential
                         </button>
                         <div id="credential-save-success-msg" th:if="${credentialSaveSuccess}" class="alert alert-success">
@@ -205,24 +203,24 @@
                                 <tbody>
                                 <tr th:each="credential:${credentials}">
                                     <td>
-                                        <button type="button" class="btn btn-success"
+                                        <button type="button" class="btn btn-success credential-edit-button"
                                                 th:onclick="javascript: showCredentialModal([[${credential.credentialId}]], [[${credential.url}]], [[${credential.username}]], [[${credential.password}]])">
                                             Edit
                                         </button>
-                                        <a class="btn btn-danger" th:href="@{credentials/delete/{id}(id=${credential.credentialId})}">Delete</a>
+                                        <a class="btn btn-danger credential-delete-button" th:href="@{credentials/delete/{id}(id=${credential.credentialId})}">Delete</a>
                                     </td>
-                                    <td th:text="${credential.url}">Example Credential URL </td>
-                                    <td th:text="${credential.username}">Example Credential Username</td>
-                                    <td th:text="${#strings.repeat('*', credential.password.length())}">********</td>
+                                    <td class="url-print" th:text="${credential.url}">Example Credential URL </td>
+                                    <td class="username-print" th:text="${credential.username}">Example Credential Username</td>
+                                    <td class="password-print" th:text="${#strings.repeat('*', credential.password.length())}">********</td>
                                 </tr>
                                 </tbody>
                             </table>
                             <div th:if="${#lists.isEmpty(credentials)}">
-                                There is no credentials currently, please add some...
+                                <span id="no-credentials">There is no credentials currently, please add some...</span>
                             </div>
                         </div>
 
-                        <div class="modal fade" id="credentialModal" tabindex="-1" role="dialog" aria-labelledby="credentialModalLabel" aria-hidden="true">
+                        <div class="modal" id="credentialModal" tabindex="-1" role="dialog" aria-labelledby="credentialModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">

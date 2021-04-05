@@ -32,6 +32,6 @@ public class LoginPage {
     }
 
     public void clickSignupLink() {
-        signupLink.submit();
+        signupLink.click();
     }
 }
