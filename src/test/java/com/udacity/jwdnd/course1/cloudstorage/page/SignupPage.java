@@ -53,9 +53,4 @@ public class SignupPage {
     public void clickLoginLink() {
         loginLink.click();
     }
-
-    public void clickBackToLoginPageLink() {
-        backToLoginPageLink.click();
-    }
-
 }

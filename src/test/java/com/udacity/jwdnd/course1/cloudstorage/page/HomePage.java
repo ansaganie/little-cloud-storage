@@ -32,10 +32,6 @@ public class HomePage {
         notesTab.click();
     }
 
-    public void navToFileTab() {
-        filesTab.click();
-    }
-
     public void navToCredentialTab() {
         credentialsTab.click();
     }
