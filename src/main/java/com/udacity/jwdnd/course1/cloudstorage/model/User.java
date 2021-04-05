@@ -1,5 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.model;
 
+import java.util.Objects;
+
 public class User {
     private Integer userId;
     private String username;
@@ -28,10 +30,6 @@ public class User {
 
     public Integer getUserId() {
         return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public String getUsername() {
@@ -72,5 +70,18 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(getUserId(), user.getUserId()) && Objects.equals(getUsername(), user.getUsername()) && Objects.equals(getSalt(), user.getSalt()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getFirstName(), user.getFirstName()) && Objects.equals(getLastName(), user.getLastName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUserId(), getUsername(), getSalt(), getPassword(), getFirstName(), getLastName());
     }
 }

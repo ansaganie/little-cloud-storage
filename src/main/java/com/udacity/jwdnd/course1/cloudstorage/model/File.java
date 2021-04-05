@@ -29,7 +29,6 @@ public class File {
     }
 
     public File() {
-
     }
 
     public Integer getFileId() {
@@ -82,18 +81,6 @@ public class File {
 
     public void setUploadTime(Date uploadTime) {
         this.uploadTime = uploadTime;
-    }
-
-    @Override
-    public String toString() {
-        return "File{" +
-                "fileId=" + fileId +
-                ", filename='" + filename + '\'' +
-                ", contentType='" + contentType + '\'' +
-                ", fileSize=" + fileSize +
-                ", userId=" + userId +
-                ", uploadTime=" + uploadTime +
-                '}';
     }
 
     @Override

@@ -51,7 +51,7 @@ public class NoteController {
                 }
             }
         }
-        return "redirect:/home";
+        return "redirect:/home#nav-notes";
     }
 
     @GetMapping("/delete/{id}")
@@ -66,6 +66,6 @@ public class NoteController {
             ra.addFlashAttribute("noteDeleteSuccess", true);
         }
         ra.addFlashAttribute("files", noteService.getAllNotesByUserId(user.getUserId()));
-        return "redirect:/home";
+        return "redirect:/home#nav-notes";
     }
 }

@@ -26,6 +26,8 @@ public interface FileMapper {
     @Select("SELECT * FROM FILES WHERE fileid = #{fileId}")
     File getFileById(Integer fileId);
 
+    @Select("SELECT * FROM FILES WHERE filename = #{filename}")
+    File getFileByFilename(String filename);
 
     //UPDATE
     @Update("UPDATE FILES set filename=#{filename}, contenttype=#{contentType}, filesize=#{fileSize}, " +
@@ -35,6 +37,7 @@ public interface FileMapper {
     //DELETE
     @Delete("DELETE FROM FILES WHERE fileid = #{fileId}")
     int deleteById(Integer fileId);
+
 
 
 }

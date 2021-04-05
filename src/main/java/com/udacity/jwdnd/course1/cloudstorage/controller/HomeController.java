@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/home")
+@RequestMapping("/")
 public class HomeController {
     private final FileService fileService;
     private final CredentialService credentialService;
@@ -30,7 +30,7 @@ public class HomeController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @GetMapping("/home")
     public String homeView(Authentication authentication, Model model) {
         User user = userService.getUserByUsername(authentication.getName());
         if (user != null) {
@@ -40,5 +40,10 @@ public class HomeController {
             model.addAttribute("credentials", credentialService.getAllCredentialsByUserId(userId));
         }
         return "home";
+    }
+
+    @GetMapping
+    public String redirectToHome() {
+        return "redirect:/home";
     }
 }

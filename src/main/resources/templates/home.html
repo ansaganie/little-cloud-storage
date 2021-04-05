@@ -11,7 +11,6 @@
     </head>
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container">
-
             <div id="contentDiv" style="clear: right;">
                 <div id="tabs-1" style="clear: right;">
                     <ul class="nav nav-tabs" id="myTab">
@@ -35,19 +34,21 @@
                             You successfully uploaded the file.
                         </div>
                         <div id="file-upload-error-msg" th:if="${fileUploadError}"  class="alert alert-danger">
-                            <span>Some error happened while upload</span>
+                            Some error happened while upload
                         </div>
                         <div id="file-delete-error-msg" th:if="${fileDeleteError}"  class="alert alert-danger">
-                            <span>Some error happened while deleting the file</span>
+                           Some error happened while deleting the file
                         </div>
                         <div id="file-delete-success-msg" th:if="${fileDeleteSuccess}" class="alert alert-success">
                             You successfully deleted the file.
                         </div>
                         <div id="file-download-error-msg" th:if="${fileDownloadError}"  class="alert alert-danger">
-                            <span>Some error has happened while deleting the file</span>
+                            Some error happened while downloading the file
                         </div>
-                        <div class="text-warning">
-                            <h3></h3>
+                        <div id="file-exists-msg" th:if="${fileExists}"  class="alert alert-danger">
+                            You already have a file with the same filename and size.
+                                If you are sure that these are different files,
+                                please try to change its name and upload it again.
                         </div>
                         <form th:action="@{/files/upload}" enctype="multipart/form-data" method="POST">
                             <div class="container">
@@ -68,9 +69,9 @@
                             <table class="table table-striped" id="fileTable">
                                 <thead>
                                     <tr>
-                                        <th style="width: 20%" scope="col"></th>
-                                        <th style="width: 80%" scope="col">File Name</th>
-                                        <th style="width: 80%" scope="col">Size</th>
+                                        <th style="width: 20%" scope="col">Action</th>
+                                        <th style="width: 60%" scope="col">File Name</th>
+                                        <th style="width: 20%" scope="col">Size</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -80,10 +81,13 @@
                                             <a  class="btn btn-danger" th:href="@{/files/delete/{id}(id=${file.fileId})}">Delete</a>
                                         </td>
                                         <td th:text="${file.filename}"></td>
-                                        <td th:text="${file.fileSize}"></td>
+                                        <td th:text="${file.fileSize} + ' bytes'"> </td>
                                     </tr>
                                 </tbody>
                             </table>
+                            <div th:if="${#lists.isEmpty(files)}">
+                                There is no files currently, please upload some...
+                            </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
@@ -133,6 +137,9 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <div th:if="${#lists.isEmpty(notes)}">
+                                There is no notes currently, please add some...
+                            </div>
                         </div>
 
                         <div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel" aria-hidden="true">
@@ -186,10 +193,10 @@
                             Credential was not deleted, please try again
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-striped" th:object="${credentials}" id="credentialTable">
+                            <table class="table table-striped" id="credentialTable">
                                 <thead>
                                     <tr>
-                                        <th style="width: 20%" scope="col"></th>
+                                        <th style="width: 20%" scope="col">Action</th>
                                         <th style="width: 35%" scope="col">URL</th>
                                         <th style="width: 20%" scope="col">Username</th>
                                         <th style="width: 25%" scope="col">Password</th>
@@ -204,12 +211,15 @@
                                         </button>
                                         <a class="btn btn-danger" th:href="@{credentials/delete/{id}(id=${credential.credentialId})}">Delete</a>
                                     </td>
-                                    <td th:text="${credential.url}">Example Credential URL</td>
+                                    <td th:text="${credential.url}">Example Credential URL </td>
                                     <td th:text="${credential.username}">Example Credential Username</td>
-                                    <td th:text="${credential.password}">Example Credential Password</td>
+                                    <td th:text="${#strings.repeat('*', credential.password.length())}">********</td>
                                 </tr>
                                 </tbody>
                             </table>
+                            <div th:if="${#lists.isEmpty(credentials)}">
+                                There is no credentials currently, please add some...
+                            </div>
                         </div>
 
                         <div class="modal fade" id="credentialModal" tabindex="-1" role="dialog" aria-labelledby="credentialModalLabel" aria-hidden="true">
@@ -268,6 +278,15 @@
                 $('#credential-username').val(username ? username : '');
                 $('#credential-password').val(password ? password : '');
                 $('#credentialModal').modal('show');
+            }
+
+            var url = window.location.href;
+            var activeTab = url.substring(url.indexOf("#") + 1);
+            if (!activeTab.endsWith("home")) {
+                $(".tab-pane").removeClass("show active in");
+                $(".nav-link").removeClass("active");
+                $("#" + activeTab).addClass("show active in");
+                $("#" + activeTab + "-tab").addClass("active");
             }
         </script>
     </body>

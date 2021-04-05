@@ -11,6 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
+
 
 @Controller
 @RequestMapping("/credentials")
@@ -26,7 +29,7 @@ public class CredentialController {
 
     @PostMapping("/save")
     public String saveCredential(@ModelAttribute("credential") Credential credential, Authentication authentication,
-                                 RedirectAttributes ra) {
+                                 RedirectAttributes ra, HttpServletRequest request) {
         User user = userService.getUserByUsername(authentication.getName());
         Integer userId = user.getUserId();
         if (credential == null) {
@@ -67,6 +70,6 @@ public class CredentialController {
             ra.addFlashAttribute("credentialDeleteSuccess", true);
         }
         ra.addFlashAttribute("files", credentialService.getAllCredentialsByUserId(user.getUserId()));
-        return "redirect:/home";
+        return "redirect:/home#nav-credentials";
     }
 }

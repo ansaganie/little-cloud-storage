@@ -30,4 +30,9 @@ public class FileService {
     public File getFileById(Integer fileId) {
         return fileMapper.getFileById(fileId);
     }
+
+    public boolean fileExists(String filename, Long filesize) {
+        File file = fileMapper.getFileByFilename(filename);
+        return file != null && filesize.equals(file.getFileSize());
+    }
 }

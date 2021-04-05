@@ -37,31 +37,34 @@ public class FileController {
     public String handleFileUpload(@RequestParam("fileUpload") MultipartFile fileUpload,
                                    Authentication authentication, RedirectAttributes ra) {
         User user = userService.getUserByUsername(authentication.getName());
-        File uploadFile = null;
-        int fileId = -1;
-        try {
-            uploadFile = new File(
-                    null,
-                    StringUtils.cleanPath(Objects.requireNonNull(fileUpload.getOriginalFilename())),
-                    fileUpload.getContentType(),
-                    fileUpload.getSize(),
-                    user.getUserId(),
-                    fileUpload.getBytes(),
-                    new Date(System.currentTimeMillis()));
-            fileId = fileService.upload(uploadFile);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-        System.out.println(uploadFile);
-        System.out.println(fileId);
-        if(fileId == -1) {
-            ra.addFlashAttribute("fileUploadError", true);
-        } else {
-            ra.addFlashAttribute("fileUploadSuccess", true);
+        if (fileUpload != null) {
+            String filename = StringUtils.cleanPath(Objects.requireNonNull(fileUpload.getOriginalFilename()));
+            Long filesize = fileUpload.getSize();
+            if (fileService.fileExists(filename, filesize)) {
+                ra.addFlashAttribute("fileExists", true);
+                return "redirect:/home#nav-files";
+            }
+            File uploadFile;
+            int fileId = -1;
+            try {
+                uploadFile = new File(
+                        null,
+                        filename,
+                        fileUpload.getContentType(),
+                        filesize,
+                        user.getUserId(),
+                        fileUpload.getBytes(),
+                        new Date(System.currentTimeMillis()));
+                fileId = fileService.upload(uploadFile);
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+            }
+            if (fileId == -1) ra.addFlashAttribute("fileUploadError", true);
+            else ra.addFlashAttribute("fileUploadSuccess", true);
         }
         ra.addFlashAttribute("files", fileService.getFilesByUserId(user.getUserId()));
         ra.addFlashAttribute("activeTab", "files");
-        return "redirect:/home";
+        return "redirect:/home#nav-files";
     }
 
     @GetMapping("/delete/{id}")
@@ -77,7 +80,7 @@ public class FileController {
         }
         ra.addFlashAttribute("files", fileService.getFilesByUserId(user.getUserId()));
         ra.addFlashAttribute("activeTab", "files");
-        return "redirect:/home";
+        return "redirect:/home#nav-files";
     }
 
     @GetMapping("/download/{id}")
@@ -94,6 +97,6 @@ public class FileController {
                 logger.error(e.getMessage());
             }
         }
-        return "redirect:/home";
+        return "redirect:/home#nav-files";
     }
 }

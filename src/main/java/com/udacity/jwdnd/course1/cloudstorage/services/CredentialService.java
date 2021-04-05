@@ -45,25 +45,15 @@ public class CredentialService {
             sr.nextBytes(keyBytes);
             key = Base64.getEncoder().encodeToString(keyBytes);
         }
-
-        System.out.println(key);
-        String encryptedUrl = encryptionService.encryptValue(credential.getUrl(), key);
-        String encryptedUsername = encryptionService.encryptValue(credential.getUsername(), key);
         String encryptedPassword = encryptionService.encryptValue(credential.getPassword(), key);
         credential.setKey(key);
-        credential.setUrl(encryptedUrl);
-        credential.setUsername(encryptedUsername);
         credential.setPassword(encryptedPassword);
         return credential;
     }
 
     private Credential decryptCred(Credential credential) {
         String key = credential.getKey();
-        String decryptedUrl = encryptionService.decryptValue(credential.getUrl(), key);
-        String decryptedUsername = encryptionService.decryptValue(credential.getUsername(), key);
         String decryptedPassword = encryptionService.decryptValue(credential.getPassword(), key);
-        credential.setUrl(decryptedUrl);
-        credential.setUsername(decryptedUsername);
         credential.setPassword(decryptedPassword);
         return credential;
     }
