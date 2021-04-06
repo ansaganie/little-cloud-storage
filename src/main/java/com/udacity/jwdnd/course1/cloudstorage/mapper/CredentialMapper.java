@@ -25,6 +25,10 @@ public interface CredentialMapper {
     @Select("SELECT * FROM CREDENTIALS WHERE credentialid=#{credentialId}")
     Credential getCredentialById(Integer credentialId);
 
+    @Select("SELECT * FROM CREDENTIALS WHERE url=#{url} AND username=#{username} " +
+            "AND userid=#{userId}")
+    Credential getCredential(String url, String username, Integer userId);
+
     //UPDATE
     @Update("UPDATE CREDENTIALS set url=#{url}, username=#{username}, key=#{key}, " +
             "password=#{password}, userid=#{userId} WHERE credentialid=#{credentialId}")
@@ -33,6 +37,7 @@ public interface CredentialMapper {
     //DELETE
     @Delete("DELETE FROM CREDENTIALS WHERE credentialid = #{credentialId} AND userid = #{userId}")
     int deleteById(Integer credentialId, Integer userId);
+
 
 
 }

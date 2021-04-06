@@ -63,7 +63,21 @@ public class CredentialService {
     private Credential decryptCred(Credential credential) {
         String key = credential.getKey();
         String decryptedPassword = encryptionService.decryptValue(credential.getPassword(), key);
-        credential.setPassword(decryptedPassword);
+        credential.setDecryptedPassword(decryptedPassword);
         return credential;
+    }
+
+    public boolean exists(Credential credential, Integer userId) {
+        Credential existing = credentialMapper.getCredential(
+                credential.getUrl(),
+                credential.getUsername(),
+                userId
+        );
+        if (existing == null) return false;
+        else {
+            String key = existing.getKey();
+            String decryptedPassword = encryptionService.decryptValue(existing.getPassword(), key);
+            return decryptedPassword.equals(credential.getPassword());
+        }
     }
 }

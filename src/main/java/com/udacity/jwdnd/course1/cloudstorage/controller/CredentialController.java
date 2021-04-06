@@ -31,25 +31,28 @@ public class CredentialController {
         Integer userId = user.getUserId();
         if (credential == null) {
             ra.addFlashAttribute("credentialSaveError", true);
+            return "redirect:/home#nav-credentials";
+        } else if (credentialService.exists(credential, userId)) {
+            ra.addFlashAttribute("credentialExists", true);
+            return "redirect:/home#nav-credentials";
+        }
+        if (credential.getCredentialId() == null) {
+            int noteId;
+            credential.setUserId(userId);
+            noteId = credentialService.save(credential);
+            if (noteId < 1) ra.addFlashAttribute("credentialSaveError", true);
+            else {
+                ra.addFlashAttribute("credentialSaveSuccess", true);
+                ra.addFlashAttribute("credentials", credentialService.getAllCredentialsByUserId(user.getUserId()));
+            }
         } else {
-            if (credential.getCredentialId() == null) {
-                int noteId;
-                credential.setUserId(userId);
-                noteId = credentialService.save(credential);
-                if (noteId < 1) ra.addFlashAttribute("credentialSaveError", true);
-                else {
-                    ra.addFlashAttribute("credentialSaveSuccess", true);
-                    ra.addFlashAttribute("credentials", credentialService.getAllCredentialsByUserId(user.getUserId()));
-                }
+            credential.setUserId(user.getUserId());
+            int updated = credentialService.update(credential, userId);
+            if (updated > 0) {
+                ra.addFlashAttribute("credentialUpdateSuccess", true);
+                ra.addFlashAttribute("credentials", credentialService.getAllCredentialsByUserId(user.getUserId()));
             } else {
-                credential.setUserId(user.getUserId());
-                int updated = credentialService.update(credential, userId);
-                if (updated > 0) {
-                    ra.addFlashAttribute("credentialUpdateSuccess", true);
-                    ra.addFlashAttribute("credentials", credentialService.getAllCredentialsByUserId(user.getUserId()));
-                } else {
-                    ra.addFlashAttribute("credentialUpdateError", true);
-                }
+                ra.addFlashAttribute("credentialUpdateError", true);
             }
         }
         return "redirect:/home#nav-credentials";

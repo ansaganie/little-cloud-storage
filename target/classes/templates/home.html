@@ -181,6 +181,9 @@
                         <div id="credential-delete-error-msg" th:if="${credentialDeleteError}"  class="alert alert-danger">
                             <span th:text="#{credential-tab.credential-delete-error-msg}"></span>
                         </div>
+                        <div id="credential-already-exists-msg" th:if="${credentialExists}"  class="alert alert-danger">
+                            <span th:text="#{credential-tab.credential-already-exists-msg}"></span>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-striped" id="credentialTable">
                                 <thead>
@@ -195,14 +198,14 @@
                                 <tr th:each="credential:${credentials}">
                                     <td>
                                         <button type="button" class="btn btn-success credential-edit-button"
-                                                th:onclick="javascript: showCredentialModal([[${credential.credentialId}]], [[${credential.url}]], [[${credential.username}]], [[${credential.password}]])">
+                                                th:onclick="javascript: showCredentialModal([[${credential.credentialId}]], [[${credential.url}]], [[${credential.username}]], [[${credential.decryptedPassword}]])">
                                             Edit
                                         </button>
                                         <a class="btn btn-danger credential-delete-button" th:href="@{credentials/delete/{id}(id=${credential.credentialId})}">Delete</a>
                                     </td>
                                     <td class="url-print" th:text="${credential.url}">Example Credential URL </td>
                                     <td class="username-print" th:text="${credential.username}">Example Credential Username</td>
-                                    <td class="password-print" th:text="${#strings.repeat('*', credential.password.length())}">********</td>
+                                    <td class="password-print" th:text="${credential.password}">********</td>
                                 </tr>
                                 </tbody>
                             </table>
