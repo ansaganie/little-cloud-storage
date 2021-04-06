@@ -9,7 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -87,7 +91,7 @@ public class FileController {
     }
 
     @GetMapping("/download/{id}")
-    public String getFile(@PathVariable("id") Integer id, Authentication authentication,
+    public void getFile(@PathVariable("id") Integer id, Authentication authentication,
                           HttpServletResponse response, RedirectAttributes ra) {
         User user = userService.getUserByUsername(authentication.getName());
         Integer userId = user.getUserId();
@@ -103,6 +107,5 @@ public class FileController {
                 logger.error(e.getMessage());
             }
         }
-        return "redirect:/home#nav-files";
     }
 }
