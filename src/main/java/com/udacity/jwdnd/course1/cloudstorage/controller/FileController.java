@@ -6,6 +6,7 @@ import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -21,6 +22,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 @Controller
@@ -30,10 +32,12 @@ public class FileController {
     private final UserService userService;
 
     private final Logger logger = LoggerFactory.getLogger(FileController.class);
+    private final MessageSource messageSource;
 
-    public FileController(FileService fileService, UserService userService) {
+    public FileController(FileService fileService, UserService userService, MessageSource messageSource) {
         this.fileService = fileService;
-        this.userService= userService;
+        this.userService = userService;
+        this.messageSource = messageSource;
     }
 
     @PostMapping("/upload")
@@ -41,11 +45,16 @@ public class FileController {
                                    Authentication authentication, RedirectAttributes ra) {
         User user = userService.getUserByUsername(authentication.getName());
         Integer userId = user.getUserId();
+        String errorMessage;
+        String successMessage;
+
         if (!fileUpload.isEmpty()) {
             String filename = StringUtils.cleanPath(Objects.requireNonNull(fileUpload.getOriginalFilename()));
             Long filesize = fileUpload.getSize();
             if (fileService.fileExists(filename,  userId, filesize)) {
-                ra.addFlashAttribute("fileExists", true);
+                errorMessage = messageSource.getMessage("files-tab.file-already-exist-msg", null, Locale.getDefault());
+                ra.addFlashAttribute("errorMessage", errorMessage);
+                logger.error("Files error: " + errorMessage + " userId = " + userId);
                 return "redirect:/home#nav-files";
             }
             File uploadFile;
@@ -63,13 +72,20 @@ public class FileController {
             } catch (IOException e) {
                 logger.error(e.getMessage());
             }
-            if (fileId == -1) ra.addFlashAttribute("fileUploadError", true);
-            else ra.addFlashAttribute("fileUploadSuccess", true);
+            if (fileId == -1) {
+                errorMessage = messageSource.getMessage("files-tab.file-upload-error-msg", null, Locale.getDefault());
+                ra.addFlashAttribute("errorMessage", errorMessage);
+                logger.error("Files error: " + errorMessage + " userId = " + userId);
+            } else {
+                successMessage = messageSource.getMessage("files-tab.file-upload-success-msg", null, Locale.getDefault());
+                ra.addFlashAttribute("successMessage", successMessage);
+                ra.addFlashAttribute("files", fileService.getFilesByUserId(user.getUserId()));
+            }
         } else {
-            ra.addFlashAttribute("fileUploadError", true);
+            errorMessage = messageSource.getMessage("files-tab.file-is-empty-msg", null, Locale.getDefault());
+            ra.addFlashAttribute("errorMessage", errorMessage);
+            logger.error("Files error: " + errorMessage + " userId = " + userId);
         }
-        ra.addFlashAttribute("files", fileService.getFilesByUserId(user.getUserId()));
-        ra.addFlashAttribute("activeTab", "files");
         return "redirect:/home#nav-files";
     }
 
@@ -81,12 +97,15 @@ public class FileController {
         int deleted = fileService.deleteById(id, userId);
         if (deleted == 0){
             logger.error("File with id = " + id + " was not deleted");
-            ra.addFlashAttribute("fileDeleteError", true);
+            ra.addFlashAttribute("errorMessage", messageSource.getMessage(
+                    "files-tab.file-delete-error-msg", null, Locale.getDefault()
+            ));
         } else {
-            ra.addFlashAttribute("fileDeleteSuccess", true);
+            ra.addFlashAttribute("successMessage", messageSource.getMessage(
+                    "files-tab.file-delete-success-msg", null, Locale.getDefault()
+            ));
         }
         ra.addFlashAttribute("files", fileService.getFilesByUserId(userId));
-        ra.addFlashAttribute("activeTab", "files");
         return "redirect:/home#nav-files";
     }
 
@@ -97,7 +116,9 @@ public class FileController {
         Integer userId = user.getUserId();
         File file = fileService.getFileById(id, userId);
         if (file == null) {
-            ra.addFlashAttribute("fileDownloadError", true);
+            ra.addFlashAttribute("errorMessage", messageSource.getMessage(
+                    "files-tab.file-download-error-msg", null, Locale.getDefault()
+            ));
         } else {
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", "attachment; filename=" + file.getFilename());
