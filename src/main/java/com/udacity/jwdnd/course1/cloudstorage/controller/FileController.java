@@ -88,12 +88,12 @@ public class FileController {
 
     @GetMapping("/download/{id}")
     public String getFile(@PathVariable("id") Integer id, Authentication authentication,
-                          HttpServletResponse response) {
+                          HttpServletResponse response, RedirectAttributes ra) {
         User user = userService.getUserByUsername(authentication.getName());
         Integer userId = user.getUserId();
         File file = fileService.getFileById(id, userId);
         if (file == null) {
-            throw new IllegalArgumentException("There is no file with such id = " + id);
+            ra.addFlashAttribute("fileDownloadError", true);
         } else {
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", "attachment; filename=" + file.getFilename());

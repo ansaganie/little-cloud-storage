@@ -12,7 +12,7 @@
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container">
             <div id="contentDiv" style="clear: right;">
-                <div id="tabs-1" style="clear: right;">
+                <div id="tab-navs" style="clear: right;">
                     <ul class="nav nav-tabs" id="myTab">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="nav-files-tab" data-bs-toggle="tab" data-bs-target="#nav-files" type="button" role="tab" aria-controls="home" aria-selected="true">Files</button>
@@ -46,19 +46,19 @@
                             </div>
                         </form>
                         <div id="file-upload-success-msg" th:if="${fileUploadSuccess}" class="alert alert-success">
-                            You successfully uploaded the file.
+                            <span th:text="#{files-tab.file-upload-success-msg}"></span>
                         </div>
                         <div id="file-upload-error-msg" th:if="${fileUploadError}"  class="alert alert-danger">
-                            Some error happened while upload
-                        </div>
-                        <div id="file-delete-error-msg" th:if="${fileDeleteError}"  class="alert alert-danger">
-                           Some error happened while deleting the file
+                            <span th:text="#{files-tab.file-upload-error-msg}"></span>
                         </div>
                         <div id="file-delete-success-msg" th:if="${fileDeleteSuccess}" class="alert alert-success">
-                            You successfully deleted the file.
+                            <span th:text="#{files-tab.file-delete-success-msg}"></span>
+                        </div>
+                        <div id="file-delete-error-msg" th:if="${fileDeleteError}"  class="alert alert-danger">
+                            <span th:text="#{files-tab.file-delete-error-msg}"></span>
                         </div>
                         <div id="file-download-error-msg" th:if="${fileDownloadError}"  class="alert alert-danger">
-                            Some error happened while downloading the file
+                            <span th:text="#{files-tab.file-download-error-msg}"></span>
                         </div>
                         <div id="file-exists-msg" th:if="${fileExists}"  class="alert alert-danger">
                             You already have a file with the same filename and size.
@@ -95,22 +95,22 @@
                             + Add a New Note
                         </button>
                         <div id="note-save-success-msg" th:if="${noteSaveSuccess}" class="alert alert-success">
-                            Note was saved.
+                            <span th:text="#{notes-tab.note-save-success-msg}"></span>
                         </div>
                         <div id="note-save-error-msg" th:if="${noteSaveError}"  class="alert alert-danger">
-                            Note was not save, please try again
+                            <span th:text="#{notes-tab.note-save-error-msg}"></span>
                         </div>
                         <div id="note-update-success-msg" th:if="${noteUpdateSuccess}" class="alert alert-success">
-                            Note was updated.
+                            <span th:text="#{notes-tab.note-update-success-msg}"></span>
                         </div>
                         <div id="note-update-error-msg" th:if="${noteUpdateError}"  class="alert alert-danger">
-                            Note was not updated, please try again
+                            <span th:text="#{notes-tab.note-update-error-msg}"></span>
                         </div>
                         <div id="note-delete-success-msg" th:if="${noteDeleteSuccess}" class="alert alert-success">
-                            Note was deleted.
+                            <span th:text="#{notes-tab.note-delete-success-msg}"></span>
                         </div>
                         <div id="note-delete-error-msg" th:if="${noteDeleteError}"  class="alert alert-danger">
-                            Note was not deleted, please try again
+                            <span th:text="#{notes-tab.note-delete-error-msg}"></span>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped" id="userTable">
@@ -173,22 +173,22 @@
                             + Add a New Credential
                         </button>
                         <div id="credential-save-success-msg" th:if="${credentialSaveSuccess}" class="alert alert-success">
-                            Credential was saved.
+                            <span th:text="#{notes-tab.credential-save-success-msg}"></span>
                         </div>
                         <div id="credential-save-error-msg" th:if="${credentialSaveError}"  class="alert alert-danger">
-                            Credential was not save, please try again
+                            <span th:text="#{notes-tab.credential-save-error-msg}"></span>
                         </div>
                         <div id="credential-update-success-msg" th:if="${credentialUpdateSuccess}" class="alert alert-success">
-                            Credential was updated.
+                            <span th:text="#{notes-tab.credential-update-success-msg}"></span>
                         </div>
                         <div id="credential-update-error-msg" th:if="${credentialUpdateError}"  class="alert alert-danger">
-                            Credential was not updated, please try again
+                            <span th:text="#{notes-tab.credential-update-error-msg}"></span>
                         </div>
                         <div id="credential-delete-success-msg" th:if="${credentialDeleteSuccess}" class="alert alert-success">
-                            Credential was deleted.
+                            <span th:text="#{notes-tab.credential-delete-success-msg}"></span>
                         </div>
                         <div id="credential-delete-error-msg" th:if="${credentialDeleteError}"  class="alert alert-danger">
-                            Credential was not deleted, please try again
+                            <span th:text="#{notes-tab.credential-delete-error-msg}"></span>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped" id="credentialTable">
