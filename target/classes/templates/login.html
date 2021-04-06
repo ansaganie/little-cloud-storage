@@ -18,12 +18,12 @@
                 <div id="logout-msg" th:if="${param.logout}" class="alert alert-dark">
                     <span th:text="#{login-page.logout-msg}"></span>
                 </div>
-                <div id="signup-success-msg" th:if="${signupSuccess}" class="alert alert-dark">
+                <div id="signup-success-msg" th:if="${signupSuccess}" class="alert alert-success">
                     <span th:text="#{login-page.signup-success-msg}"></span>
                 </div>
                 <div class="form-group">
                     <label for="inputUsername">Username</label>
-                    <input type="" class="form-control" name="username" id="inputUsername" placeholder="Enter Username" maxlength="20" required>
+                    <input type="text" class="form-control" name="username" id="inputUsername" placeholder="Enter Username" maxlength="20" required>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword">Password</label>

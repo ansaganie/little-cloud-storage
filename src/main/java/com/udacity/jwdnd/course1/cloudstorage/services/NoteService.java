@@ -32,4 +32,12 @@ public class NoteService {
     public int deleteById(Integer id, Integer userId) {
         return noteMapper.deleteById(id, userId);
     }
+
+    public boolean exists(Note note, Integer userId) {
+        Note existing = noteMapper.getNoteByNoteTitleAndDescription(
+                note.getNoteTitle(),
+                note.getNoteDescription(),
+                userId);
+        return existing != null;
+    }
 }

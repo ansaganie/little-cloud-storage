@@ -94,23 +94,11 @@
                         <button id="add-note-button" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
                             + Add a New Note
                         </button>
-                        <div id="note-save-success-msg" th:if="${noteSaveSuccess}" class="alert alert-success">
-                            <span th:text="#{notes-tab.note-save-success-msg}"></span>
+                        <div id="note-success-msg" th:if="${successMessage}" class="alert alert-success">
+                            <span th:text="${successMessage}"></span>
                         </div>
-                        <div id="note-save-error-msg" th:if="${noteSaveError}"  class="alert alert-danger">
-                            <span th:text="#{notes-tab.note-save-error-msg}"></span>
-                        </div>
-                        <div id="note-update-success-msg" th:if="${noteUpdateSuccess}" class="alert alert-success">
-                            <span th:text="#{notes-tab.note-update-success-msg}"></span>
-                        </div>
-                        <div id="note-update-error-msg" th:if="${noteUpdateError}"  class="alert alert-danger">
-                            <span th:text="#{notes-tab.note-update-error-msg}"></span>
-                        </div>
-                        <div id="note-delete-success-msg" th:if="${noteDeleteSuccess}" class="alert alert-success">
-                            <span th:text="#{notes-tab.note-delete-success-msg}"></span>
-                        </div>
-                        <div id="note-delete-error-msg" th:if="${noteDeleteError}"  class="alert alert-danger">
-                            <span th:text="#{notes-tab.note-delete-error-msg}"></span>
+                        <div id="note-error-msg" th:if="${errorMessage}"  class="alert alert-danger">
+                            <span th:text="${errorMessage}"></span>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped" id="userTable">
