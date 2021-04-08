@@ -45,11 +45,11 @@
                                 </div>
                             </div>
                         </form>
-                        <div id="file-success-msg" th:if="${successMessage}" class="alert alert-success">
-                            <span th:text="${successMessage}"></span>
+                        <div id="file-success-msg" th:if="${fileSuccessMessage}" class="alert alert-success">
+                            <span th:text="${fileSuccessMessage}"></span>
                         </div>
-                        <div id="file-error-msg" th:if="${errorMessage}"  class="alert alert-danger">
-                            <span th:text="${errorMessage}"></span>
+                        <div id="file-error-msg" th:if="${fileErrorMessage}"  class="alert alert-danger">
+                            <span th:text="${fileErrorMessage}"></span>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped" id="fileTable">
@@ -80,11 +80,11 @@
                         <button id="add-note-button" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
                             + Add a New Note
                         </button>
-                        <div th:if="${successMessage}" class="alert alert-success">
-                            <span id="note-success-msg" th:text="${successMessage}"></span>
+                        <div th:if="${noteSuccessMessage}" class="alert alert-success">
+                            <span id="note-success-msg" th:text="${noteSuccessMessage}"></span>
                         </div>
-                        <div th:if="${errorMessage}" class="alert alert-danger">
-                            <span id="note-error-msg" th:text="${errorMessage}"></span>
+                        <div th:if="${noteErrorMessage}" class="alert alert-danger">
+                            <span id="note-error-msg" th:text="${noteErrorMessage}"></span>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped" id="userTable">
@@ -146,11 +146,11 @@
                         <button id="add-credential-button" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
                             + Add a New Credential
                         </button>
-                        <div th:if="${successMessage}" class="alert alert-success">
-                            <span id="credential-success-msg" th:text="${successMessage}"></span>
+                        <div th:if="${credentialSuccessMessage}" class="alert alert-success">
+                            <span id="credential-success-msg" th:text="${credentialSuccessMessage}"></span>
                         </div>
-                        <div th:if="${errorMessage}"  class="alert alert-danger">
-                            <span id="credential-error-msg" th:text="${errorMessage}"></span>
+                        <div th:if="${credentialErrorMessage}"  class="alert alert-danger">
+                            <span id="credential-error-msg" th:text="${credentialErrorMessage}"></span>
                         </div>
                         
                         <div class="table-responsive">

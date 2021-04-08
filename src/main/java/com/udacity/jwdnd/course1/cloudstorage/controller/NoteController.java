@@ -18,11 +18,12 @@ import java.util.Locale;
 @RequestMapping("/notes")
 public class NoteController {
     private final Logger logger = LoggerFactory.getLogger(NoteController.class);
-
     private final NoteService noteService;
     private final UserService userService;
-
     private final MessageSource messageSource;
+
+    private final String SUCCESS_MESSAGE = "noteSuccessMessage";
+    private final String ERROR_MESSAGE = "noteErrorMessage";
 
     public NoteController(NoteService noteService, UserService userService, MessageSource messageSource) {
         this.noteService = noteService;
@@ -36,25 +37,25 @@ public class NoteController {
         User user = userService.getUserByUsername(authentication.getName());
         Integer userId = user.getUserId();
         String errorMsg;
-        String successMsg = null;
+        String successMsg;
         //if note form is empty
         if (note == null) {
             errorMsg = messageSource.getMessage("notes-tab.note-empty-form-msg", null, Locale.getDefault());
-            ra.addFlashAttribute("errorMessage", errorMsg);
+            ra.addFlashAttribute(ERROR_MESSAGE, errorMsg);
             logger.debug("Note was not saved: " + errorMsg + " from user: " + userId);
             return "redirect:/home#nav-notes";
 
         } //note description length check
         else if (note.getNoteDescription().length() > 1000) {
             errorMsg = messageSource.getMessage("notes-tab.note-description-too-long-msg", null, Locale.getDefault());
-            ra.addFlashAttribute("errorMessage", errorMsg);
+            ra.addFlashAttribute(ERROR_MESSAGE, errorMsg);
             logger.debug("Note was not saved: " + errorMsg + " from user: " + userId);
             return "redirect:/home#nav-notes";
 
         } //if the same note submitted again from the same user
         else if (noteService.exists(note, userId)) {
             errorMsg = messageSource.getMessage("notes-tab.note-already-exists-msg", null, Locale.getDefault());
-            ra.addFlashAttribute("errorMessage", errorMsg);
+            ra.addFlashAttribute(ERROR_MESSAGE, errorMsg);
             logger.debug("Note was not saved: " + errorMsg + " from user: " + userId);
             return "redirect:/home#nav-notes";
         }
@@ -66,11 +67,11 @@ public class NoteController {
             //if note was not saved for some reason
             if (noteSaved != 1) {
                 errorMsg = messageSource.getMessage("notes-tab.note-save-error-msg", null, Locale.getDefault());
-                ra.addFlashAttribute("errorMessage", errorMsg);
+                ra.addFlashAttribute(ERROR_MESSAGE, errorMsg);
                 logger.debug("Note was not saved: " + errorMsg + " from user: " + userId);
             } else {
                 successMsg = messageSource.getMessage("notes-tab.note-save-success-msg", null, Locale.getDefault());
-                ra.addFlashAttribute("successMessage", successMsg);
+                ra.addFlashAttribute(SUCCESS_MESSAGE, successMsg);
                 ra.addFlashAttribute("notes", noteService.getAllNotesByUserId(user.getUserId()));
             }
         } else {
@@ -78,11 +79,11 @@ public class NoteController {
             int updated = noteService.update(note, userId);
             if (updated != 1) {
                 errorMsg = messageSource.getMessage("notes-tab.note-update-error-msg", null, Locale.getDefault());
-                ra.addFlashAttribute("errorMessage", errorMsg);
+                ra.addFlashAttribute(ERROR_MESSAGE, errorMsg);
                 logger.debug("Note was not saved: " + errorMsg + " from user: " + userId);
             } else {
                 successMsg = messageSource.getMessage("notes-tab.note-update-success-msg", null, Locale.getDefault());
-                ra.addFlashAttribute("successMessage", successMsg);
+                ra.addFlashAttribute(SUCCESS_MESSAGE, successMsg);
                 ra.addFlashAttribute("notes", noteService.getAllNotesByUserId(user.getUserId()));
             }
         }
@@ -97,10 +98,10 @@ public class NoteController {
         if (deleted == 0){
             logger.error("Note with id = " + id + " was not deleted");
             String errorMsg = messageSource.getMessage("notes-tab.note-delete-error-msg", null, Locale.getDefault());
-            ra.addFlashAttribute("errorMessage", errorMsg);
+            ra.addFlashAttribute(ERROR_MESSAGE, errorMsg);
         } else {
             String successMsg = messageSource.getMessage("notes-tab.note-delete-success-msg", null, Locale.getDefault());
-            ra.addFlashAttribute("successMessage", successMsg);
+            ra.addFlashAttribute(SUCCESS_MESSAGE, successMsg);
         }
         ra.addFlashAttribute("files", noteService.getAllNotesByUserId(user.getUserId()));
         return "redirect:/home#nav-notes";

@@ -30,6 +30,8 @@ import java.util.Objects;
 public class FileController {
     private final FileService fileService;
     private final UserService userService;
+    private final String ERROR_MESSAGE = "fileErrorMessage";
+    private final String SUCCESS_MESSAGE = "fileSuccessMessage";
 
     private final Logger logger = LoggerFactory.getLogger(FileController.class);
     private final MessageSource messageSource;
@@ -53,7 +55,7 @@ public class FileController {
             Long filesize = fileUpload.getSize();
             if (fileService.fileExists(filename,  userId, filesize)) {
                 errorMessage = messageSource.getMessage("files-tab.file-already-exist-msg", null, Locale.getDefault());
-                ra.addFlashAttribute("errorMessage", errorMessage);
+                ra.addFlashAttribute(ERROR_MESSAGE, errorMessage);
                 logger.error("Files error: " + errorMessage + " userId = " + userId);
                 return "redirect:/home#nav-files";
             }
@@ -74,16 +76,16 @@ public class FileController {
             }
             if (fileId == -1) {
                 errorMessage = messageSource.getMessage("files-tab.file-upload-error-msg", null, Locale.getDefault());
-                ra.addFlashAttribute("errorMessage", errorMessage);
+                ra.addFlashAttribute(ERROR_MESSAGE, errorMessage);
                 logger.error("Files error: " + errorMessage + " userId = " + userId);
             } else {
                 successMessage = messageSource.getMessage("files-tab.file-upload-success-msg", null, Locale.getDefault());
-                ra.addFlashAttribute("successMessage", successMessage);
+                ra.addFlashAttribute(SUCCESS_MESSAGE, successMessage);
                 ra.addFlashAttribute("files", fileService.getFilesByUserId(user.getUserId()));
             }
         } else {
             errorMessage = messageSource.getMessage("files-tab.file-is-empty-msg", null, Locale.getDefault());
-            ra.addFlashAttribute("errorMessage", errorMessage);
+            ra.addFlashAttribute(ERROR_MESSAGE, errorMessage);
             logger.error("Files error: " + errorMessage + " userId = " + userId);
         }
         return "redirect:/home#nav-files";
@@ -97,11 +99,11 @@ public class FileController {
         int deleted = fileService.deleteById(id, userId);
         if (deleted == 0){
             logger.error("File with id = " + id + " was not deleted");
-            ra.addFlashAttribute("errorMessage", messageSource.getMessage(
+            ra.addFlashAttribute(ERROR_MESSAGE, messageSource.getMessage(
                     "files-tab.file-delete-error-msg", null, Locale.getDefault()
             ));
         } else {
-            ra.addFlashAttribute("successMessage", messageSource.getMessage(
+            ra.addFlashAttribute(SUCCESS_MESSAGE, messageSource.getMessage(
                     "files-tab.file-delete-success-msg", null, Locale.getDefault()
             ));
         }
@@ -116,7 +118,7 @@ public class FileController {
         Integer userId = user.getUserId();
         File file = fileService.getFileById(id, userId);
         if (file == null) {
-            ra.addFlashAttribute("errorMessage", messageSource.getMessage(
+            ra.addFlashAttribute(ERROR_MESSAGE, messageSource.getMessage(
                     "files-tab.file-download-error-msg", null, Locale.getDefault()
             ));
         } else {

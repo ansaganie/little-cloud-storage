@@ -20,9 +20,10 @@ import java.util.Locale;
 public class CredentialController {
     private final Logger logger = LoggerFactory.getLogger(CredentialController.class);
     private final MessageSource messageSource;
-
     private final CredentialService credentialService;
     private final UserService userService;
+    private final String SUCCESS_MESSAGE = "credentialSuccessMessage";
+    private final String ERROR_MESSAGE = "credentialErrorMessage";
 
     public CredentialController(CredentialService credentialService, UserService userService,
                                 MessageSource messageSource) {
@@ -43,13 +44,13 @@ public class CredentialController {
         if (credential == null) {
             errorMessage = messageSource.getMessage("credentials-tab.credential-empty-form-msg",
                     null, Locale.getDefault());
-            ra.addFlashAttribute("errorMessage", errorMessage);
+            ra.addFlashAttribute(ERROR_MESSAGE, errorMessage);
             logger.error("Credential error: " + errorMessage + " userid = " + userId);
             return "redirect:/home#nav-credentials";
         } else if (credentialService.exists(credential, userId)) {
             errorMessage = messageSource.getMessage("credentials-tab.credential-already-exists-msg",
                     null, Locale.getDefault());
-            ra.addFlashAttribute("errorMessage", errorMessage);
+            ra.addFlashAttribute(ERROR_MESSAGE, errorMessage);
             logger.error("Credential error: " + errorMessage + " userid = " + userId);
             return "redirect:/home#nav-credentials";
         }
@@ -60,12 +61,12 @@ public class CredentialController {
             if (noteId != 1) {
                 errorMessage = messageSource.getMessage("credentials-tab.credential-save-error-msg",
                         null, Locale.getDefault());
-                ra.addFlashAttribute("errorMessage", errorMessage);
+                ra.addFlashAttribute(ERROR_MESSAGE, errorMessage);
                 logger.debug("Credential error: " + errorMessage + " userid = " + userId);
             } else {
                 successMessage = messageSource.getMessage("credentials-tab.credential-save-success-msg",
                         null, Locale.getDefault());
-                ra.addFlashAttribute("successMessage", successMessage);
+                ra.addFlashAttribute(SUCCESS_MESSAGE, successMessage);
                 ra.addFlashAttribute("credentials", credentialService.getAllCredentialsByUserId(user.getUserId()));
             }
         } else {
@@ -74,12 +75,12 @@ public class CredentialController {
             if (updated != 1) {
                 errorMessage = messageSource.getMessage("credentials-tab.credential-update-error-msg",
                         null, Locale.getDefault());
-                ra.addFlashAttribute("errorMessage", errorMessage);
+                ra.addFlashAttribute(ERROR_MESSAGE, errorMessage);
                 logger.debug("Credential error: " + errorMessage + " userid = " + userId);
             } else {
                 successMessage = messageSource.getMessage("credentials-tab.credential-update-success-msg",
                         null, Locale.getDefault());
-                ra.addFlashAttribute("successMessage", successMessage);
+                ra.addFlashAttribute(SUCCESS_MESSAGE, successMessage);
                 ra.addFlashAttribute("credentials", credentialService.getAllCredentialsByUserId(user.getUserId()));
             }
         }
@@ -94,11 +95,11 @@ public class CredentialController {
         int deleted = credentialService.deleteById(id, userId);
         if (deleted == 0){
             logger.error("Credential with id = " + id + " was not deleted");
-            ra.addFlashAttribute("errorMessage", messageSource.getMessage(
+            ra.addFlashAttribute(ERROR_MESSAGE, messageSource.getMessage(
                     "credentials-tab.credential-delete-error-msg", null, Locale.getDefault()
             ));
         } else {
-            ra.addFlashAttribute("successMessage", messageSource.getMessage(
+            ra.addFlashAttribute(SUCCESS_MESSAGE, messageSource.getMessage(
                     "credentials-tab.credential-delete-success-msg", null, Locale.getDefault()
             ));
         }
