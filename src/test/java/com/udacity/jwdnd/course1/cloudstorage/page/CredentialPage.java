@@ -40,14 +40,8 @@ public class CredentialPage {
     @FindBy(id = "no-credentials")
     private WebElement noCredentialsMsg;
 
-    @FindBy(id = "credential-save-success-msg")
-    private WebElement credentialSaveSuccessMsg;
-
-    @FindBy(id = "credential-update-success-msg")
-    private WebElement credentialUpdateSuccessMsg;
-
-    @FindBy(id = "credential-delete-success-msg")
-    private WebElement credentialDeleteSuccessMsg;
+    @FindBy(id = "credential-success-msg")
+    private WebElement credentialSuccessMsg;
 
     public CredentialPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
@@ -98,16 +92,8 @@ public class CredentialPage {
        return passwordInput.getAttribute("value");
     }
 
-    public String getCredentialSaveSuccessMsg() {
-        return credentialSaveSuccessMsg.getText();
-    }
-
-    public String getCredentialUpdateSuccessMsg() {
-        return credentialUpdateSuccessMsg.getText();
-    }
-
-    public String getCredentialDeleteSuccessMsg() {
-        return credentialDeleteSuccessMsg.getText();
+    public String getCredentialSuccessMsg() {
+        return credentialSuccessMsg.getText();
     }
 
     public String getNoCredentialsMsg() {

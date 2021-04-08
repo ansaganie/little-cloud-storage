@@ -80,11 +80,11 @@
                         <button id="add-note-button" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
                             + Add a New Note
                         </button>
-                        <div id="note-success-msg" th:if="${successMessage}" class="alert alert-success">
-                            <span th:text="${successMessage}"></span>
+                        <div th:if="${successMessage}" class="alert alert-success">
+                            <span id="note-success-msg" th:text="${successMessage}"></span>
                         </div>
-                        <div id="note-error-msg" th:if="${errorMessage}"  class="alert alert-danger">
-                            <span th:text="${errorMessage}"></span>
+                        <div th:if="${errorMessage}" class="alert alert-danger">
+                            <span id="note-error-msg" th:text="${errorMessage}"></span>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped" id="userTable">
@@ -146,11 +146,11 @@
                         <button id="add-credential-button" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
                             + Add a New Credential
                         </button>
-                        <div id="credential-success-msg" th:if="${successMessage}" class="alert alert-success">
-                            <span th:text="${successMessage}"></span>
+                        <div th:if="${successMessage}" class="alert alert-success">
+                            <span id="credential-success-msg" th:text="${successMessage}"></span>
                         </div>
-                        <div id="credential-error-msg" th:if="${errorMessage}"  class="alert alert-danger">
-                            <span th:text="${errorMessage}"></span>
+                        <div th:if="${errorMessage}"  class="alert alert-danger">
+                            <span id="credential-error-msg" th:text="${errorMessage}"></span>
                         </div>
                         
                         <div class="table-responsive">

@@ -2,10 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage;
 
 import com.udacity.jwdnd.course1.cloudstorage.page.*;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,12 +12,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CloudStorageApplicationTests {
 
 	@LocalServerPort
 	private int port;
 
 	private WebDriver driver;
+	private HomePage homePage;
+	private NotePage notePage;
+	private LoginPage loginPage;
+	private CredentialPage credentialPage;
 
 	@BeforeAll
 	static void beforeAll() {
@@ -30,6 +32,10 @@ class CloudStorageApplicationTests {
 	@BeforeEach
 	public void beforeEach() {
 		this.driver = new ChromeDriver();
+		this.homePage = new HomePage(driver);
+		this.notePage = new NotePage(driver);
+		this.loginPage = new LoginPage(driver);
+		this.credentialPage = new CredentialPage(driver);
 	}
 
 	@AfterEach
@@ -43,6 +49,7 @@ class CloudStorageApplicationTests {
 	 * "/login" and "/signup" pages
 	 */
 	@Test
+	@Order(1)
 	public void unauthorizedUserTest() {
 		driver.get("http://localhost:" + this.port + "/home");
 		assertEquals("Login", driver.getTitle());
@@ -60,23 +67,25 @@ class CloudStorageApplicationTests {
 	 */
 
 	@Test
+	@Order(2)
 	public void authorizedUserTest() {
+		LoginPage loginPage = new LoginPage(driver);
+		HomePage homePage = new HomePage(driver);
+
 		//signup new user
 		driver.get("http://localhost:" + this.port);
-		LoginPage loginPage = new LoginPage(driver);
 		loginPage.clickSignupLink();
 		SignupPage signupPage = new SignupPage(driver);
 		signupPage.signup("Ansagan", "Islyamgaliyev", "ansagan", "ansagan");
-		String successfulSignUp = "You successfully signed up! Please continue to the login page.";
-		assertEquals(successfulSignUp, signupPage.getSuccessMessage());
+		String signupSuccessMessage = loginPage.getSignupSuccessMessage();
+		assertEquals("Login", driver.getTitle());
+		assertEquals("You successfully signed up!", signupSuccessMessage);
 
 		//login and verify that the home page is accessible
-		signupPage.clickLoginLink();
 		loginPage.login("ansagan", "ansagan");
 		assertEquals("Home", driver.getTitle());
 
 		//sign out returns to Login page
-		HomePage homePage = new HomePage(driver);
 		homePage.logout();
 		assertEquals("Login", driver.getTitle());
 
@@ -93,44 +102,52 @@ class CloudStorageApplicationTests {
 	 */
 
 	@Test
-	public void notePageTest() {
-		HomePage homePage = new HomePage(driver);
-		NotePage notePage = new NotePage(driver);
-		LoginPage loginPage = new LoginPage(driver);
+	@Order(3)
+	public void addNoteTest() {
 		driver.get("http://localhost:" + this.port + "/login");
 		loginPage.login("admin", "admin");
 		homePage.navToNoteTab();
-
-		//add new note
 		String title = "note title";
 		String description = "note description";
 		notePage.clickAddNoteButton();
 		notePage.submitNote(title, description);
 		String noteTitlePrint = notePage.getNoteTitle();
 		String noteDescriptionPrint = notePage.getNoteDescription();
-		String noteSaveSuccessMsg = notePage.getNoteSaveSuccessMsg();
+		String noteSaveSuccessMsg = notePage.getNoteSuccessMsg();
 		assertEquals("Note was saved.", noteSaveSuccessMsg);
 		assertEquals(title, noteTitlePrint);
 		assertEquals(description, noteDescriptionPrint);
+	}
 
+	@Test
+	@Order(4)
+	public void editNoteTest() {
+		driver.get("http://localhost:" + this.port + "/login");
+		loginPage.login("admin", "admin");
+		homePage.navToNoteTab();
 
-		//update note
 		notePage.clickEditNoteButton();
 		String editedTitle = "Testing";
 		String editedDescription = "Your tech lead trusts you to do a good job, " +
 				"but testing is important whether you're an excel number-cruncher or a full-stack coding superstar!";
-		notePage.submitNote(editedTitle, editedDescription);
+		notePage.updateNote(editedTitle, editedDescription);
 		String editedNoteTitlePrint = notePage.getNoteTitle();
 		String editedNoteDescriptionPrint = notePage.getNoteDescription();
-		String noteUpdateSuccessMsg = notePage.getNoteUpdateSuccessMsg();
+		String noteUpdateSuccessMsg = notePage.getNoteSuccessMsg();
 		assertEquals("Note was updated.", noteUpdateSuccessMsg);
-		assertEquals(title + editedTitle, editedNoteTitlePrint);
-		assertEquals(description + editedDescription, editedNoteDescriptionPrint);
+		assertEquals(editedTitle, editedNoteTitlePrint);
+		assertEquals(editedDescription, editedNoteDescriptionPrint);
+	}
 
-		//delete note
+	@Test
+	@Order(5)
+	public void deleteNoteTest() {
+		driver.get("http://localhost:" + this.port + "/login");
+		loginPage.login("admin", "admin");
+		homePage.navToNoteTab();
 		notePage.clickDeleteNoteButton();
 		String noNotes = notePage.getNoNotesMessage();
-		String noteDeleteSuccessMsg = notePage.getNoteDeleteSuccessMsg();
+		String noteDeleteSuccessMsg = notePage.getNoteSuccessMsg();
 		assertEquals("Note was deleted.", noteDeleteSuccessMsg);
 		assertEquals("There is no notes currently, please add some...", noNotes);
 	}
@@ -141,15 +158,11 @@ class CloudStorageApplicationTests {
 	 */
 
 	@Test
-	public void credentialPageTest() {
-		HomePage homePage = new HomePage(driver);
-		CredentialPage credentialPage = new CredentialPage(driver);
-		LoginPage loginPage = new LoginPage(driver);
+	@Order(6)
+	public void addCredentialTest() {
 		driver.get("http://localhost:" + this.port + "/login");
 		loginPage.login("admin", "admin");
 		homePage.navToCredentialTab();
-
-		//add new note
 		String url = "https://classroom.udacity.com";
 		String username = "islamgaliev@mail.ru";
 		String password = "WhyAlwaysMe202104";
@@ -158,35 +171,48 @@ class CloudStorageApplicationTests {
 		String urlPrint = credentialPage.getUrlPrint();
 		String usernamePrint = credentialPage.getUsernamePrint();
 		String passwordPrint = credentialPage.getPasswordPrint();
-		String credentialSaveSuccessMsg = credentialPage.getCredentialSaveSuccessMsg();
+		String credentialSaveSuccessMsg = credentialPage.getCredentialSuccessMsg();
 		assertEquals(url, urlPrint);
 		assertEquals(username, usernamePrint);
 		assertNotEquals(password, passwordPrint);
 		assertEquals("Credential was saved.", credentialSaveSuccessMsg);
+	}
 
-		//update
+	@Test
+	@Order(7)
+	public void editCredentialTest() {
+		driver.get("http://localhost:" + this.port + "/login");
+		loginPage.login("admin", "admin");
+		homePage.navToCredentialTab();
+		String password = "WhyAlwaysMe202104";
 		credentialPage.clickEditButton();
 		String passwordInputValue = credentialPage.getPasswordInput();
 		assertEquals(password, passwordInputValue);
-		String updatedUrl = url + "/me";
+		String updatedUrl = "https://classroom.udacity.com/me";
 		String updatedUsername = "islamgaliev@gmail.com";
 		String updatedPassword = "CallMeBaby202005";
 		credentialPage.updateCredential(updatedUrl, updatedUsername, updatedPassword);
-		urlPrint = credentialPage.getUrlPrint();
-		usernamePrint = credentialPage.getUsernamePrint();
-		passwordPrint = credentialPage.getPasswordPrint();
-		String credentialUpdateSuccessMsg = credentialPage.getCredentialUpdateSuccessMsg();
+		String urlPrint = credentialPage.getUrlPrint();
+		String usernamePrint = credentialPage.getUsernamePrint();
+		String passwordPrint = credentialPage.getPasswordPrint();
+		String credentialUpdateSuccessMsg = credentialPage.getCredentialSuccessMsg();
 		assertEquals(updatedUrl, urlPrint);
 		assertEquals(updatedUsername, usernamePrint);
 		assertNotEquals(updatedPassword, passwordPrint);
 		assertEquals("Credential was updated.", credentialUpdateSuccessMsg);
-
-		//delete
-		credentialPage.clickDeleteButton();
-		String noCredentialsMsg = credentialPage.getNoCredentialsMsg();
-		String deleteSuccessMsg = credentialPage.getCredentialDeleteSuccessMsg();
-		assertEquals("There is no credentials currently, please add some...", noCredentialsMsg);
-		assertEquals("Credential was deleted.", deleteSuccessMsg);
 	}
 
+	@Test
+	@Order(8)
+	public void deleteCredentialTest() {
+		driver.get("http://localhost:" + this.port + "/login");
+		loginPage.login("admin", "admin");
+		homePage.navToCredentialTab();
+		credentialPage.clickDeleteButton();
+		String noCredentialsMsg = credentialPage.getNoCredentialsMsg();
+		String deleteSuccessMsg = credentialPage.getCredentialSuccessMsg();
+		assertEquals("There is no credentials currently, please add some...", noCredentialsMsg);
+		assertEquals("Credential was deleted.", deleteSuccessMsg);
+		homePage.logout();
+	}
 }

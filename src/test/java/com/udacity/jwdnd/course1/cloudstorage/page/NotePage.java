@@ -34,20 +34,22 @@ public class NotePage {
     @FindBy(id = "no-notes")
     private WebElement noNotes;
 
-    @FindBy(id = "note-save-success-msg")
-    private WebElement noteSaveSuccessMsg;
-
-    @FindBy(id = "note-update-success-msg")
-    private WebElement noteUpdateSuccessMsg;
-
-    @FindBy(id = "note-delete-success-msg")
-    private WebElement noteDeleteSuccessMsg;
+    @FindBy(id = "note-success-msg")
+    private WebElement noteSuccessMsg;
 
     public NotePage(WebDriver driver) {
         PageFactory.initElements(driver, this);
     }
 
     public void submitNote(String title, String description) {
+        noteTitleInput.sendKeys(title);
+        noteDescriptionInput.sendKeys(description);
+        noteSubmitButton.submit();
+    }
+
+    public void updateNote(String title, String description) {
+        noteTitleInput.clear();
+        noteDescriptionInput.clear();
         noteTitleInput.sendKeys(title);
         noteDescriptionInput.sendKeys(description);
         noteSubmitButton.submit();
@@ -77,15 +79,7 @@ public class NotePage {
         return noNotes.getText();
     }
 
-    public String getNoteSaveSuccessMsg() {
-        return noteSaveSuccessMsg.getText();
-    }
-
-    public String getNoteUpdateSuccessMsg() {
-        return noteUpdateSuccessMsg.getText();
-    }
-
-    public String getNoteDeleteSuccessMsg() {
-        return noteDeleteSuccessMsg.getText();
+    public String getNoteSuccessMsg() {
+        return noteSuccessMsg.getAttribute("innerHTML");
     }
 }

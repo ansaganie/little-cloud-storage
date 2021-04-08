@@ -19,6 +19,9 @@ public class LoginPage {
     @FindBy(id = "signup-link")
     private WebElement signupLink;
 
+    @FindBy(id = "signup-success-msg")
+    private WebElement signupSuccessMsg;
+
     public LoginPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
     }
@@ -31,5 +34,8 @@ public class LoginPage {
 
     public void clickSignupLink() {
         signupLink.click();
+    }
+    public String getSignupSuccessMessage(){
+        return signupSuccessMsg.getAttribute("innerHTML");
     }
 }
